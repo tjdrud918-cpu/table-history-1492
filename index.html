@@ -898,6 +898,18 @@
                 desc: '옥수수 알갱이와 치즈, 마요네즈가 어우러진 달콤 고소한 철판 요리입니다.',
                 slippedDesc: '옥수수가 없어 알갱이 씹히는 식감이 사라지며 치즈와 채소 구이 형태만 남습니다.',
                 historyStory: '옥수수는 고대 메조아메리카(멕시코) 원산 작물로, 단위 면적당 생산량이 극도로 높아 전 세계 식량난을 해결했습니다.'
+            },
+            ramyeon: {
+                id: 'ramyeon',
+                name: '얼큰 국물 라면',
+                icon: '🍜',
+                slippedName: '맑은 간장/소금 순한 면 요리 (고춧가루 0%)',
+                slippedIcon: '🍜',
+                newWorldIngredients: ['고추'],
+                category: '면류/분식',
+                desc: '매콤하고 얼큰한 국물과 쫄깃한 면발로 한국인의 영혼의 위로가 되는 대표 국민 간식입니다.',
+                slippedDesc: '국물의 칼칼함을 담당하는 고춧가루/고추기름이 전혀 없어, 파와 간장/소금으로만 간을 한 맑은 잔치국수나 유라시아풍 면 스튜 형태가 됩니다.',
+                historyStory: '한국 라면 특유의 얼큰하고 붉은 국물은 아메리카 대륙 원산인 고추(고춧가루) 덕분입니다. 1492년 전래 전에는 붉고 매운 라면 국물 자체가 존재할 수 없었습니다!'
             }
         };
 
@@ -954,6 +966,7 @@
                         },
 
                         favoriteFoods: [
+                            FOOD_DATABASE.ramyeon,
                             FOOD_DATABASE.roseTteokbokki,
                             FOOD_DATABASE.bburingkle,
                             FOOD_DATABASE.jicobaChicken,
@@ -1093,9 +1106,9 @@
                         var newWorldIngs = [];
                         var icon = '🍲';
                         
-                        if (cleanText.indexOf('고추') !== -1 || cleanText.indexOf('김치') !== -1 || cleanText.indexOf('지코바') !== -1 || cleanText.indexOf('양념') !== -1 || cleanText.indexOf('치킨') !== -1 || cleanText.indexOf('떡볶이') !== -1 || cleanText.indexOf('매운') !== -1 || cleanText.indexOf('불닭') !== -1 || cleanText.indexOf('제육') !== -1 || cleanText.indexOf('짬뽕') !== -1 || cleanText.indexOf('마라') !== -1 || cleanText.indexOf('고추장') !== -1 || cleanText.indexOf('깍두기') !== -1 || cleanText.indexOf('쌈장') !== -1 || cleanText.indexOf('부대찌개') !== -1 || cleanText.indexOf('카레') !== -1 || cleanText.indexOf('로제') !== -1 || cleanText.indexOf('뿌링클') !== -1 || cleanText.indexOf('타코') !== -1) {
+                        if (cleanText.indexOf('고추') !== -1 || cleanText.indexOf('김치') !== -1 || cleanText.indexOf('지코바') !== -1 || cleanText.indexOf('양념') !== -1 || cleanText.indexOf('치킨') !== -1 || cleanText.indexOf('떡볶이') !== -1 || cleanText.indexOf('매운') !== -1 || cleanText.indexOf('불닭') !== -1 || cleanText.indexOf('제육') !== -1 || cleanText.indexOf('짬뽕') !== -1 || cleanText.indexOf('마라') !== -1 || cleanText.indexOf('고추장') !== -1 || cleanText.indexOf('깍두기') !== -1 || cleanText.indexOf('쌈장') !== -1 || cleanText.indexOf('부대찌개') !== -1 || cleanText.indexOf('카레') !== -1 || cleanText.indexOf('로제') !== -1 || cleanText.indexOf('뿌링클') !== -1 || cleanText.indexOf('타코') !== -1 || cleanText.indexOf('라면') !== -1) {
                             newWorldIngs.push('고추');
-                            icon = (cleanText.indexOf('치킨') !== -1 || cleanText.indexOf('지코바') !== -1 || cleanText.indexOf('닭') !== -1 || cleanText.indexOf('뿌링클') !== -1) ? '🍗' : (cleanText.indexOf('김치') !== -1 ? '🥗' : '🥘');
+                            icon = (cleanText.indexOf('치킨') !== -1 || cleanText.indexOf('지코바') !== -1 || cleanText.indexOf('닭') !== -1 || cleanText.indexOf('뿌링클') !== -1) ? '🍗' : (cleanText.indexOf('김치') !== -1 ? '🥗' : (cleanText.indexOf('라면') !== -1 || cleanText.indexOf('짬뽕') !== -1 || cleanText.indexOf('마라') !== -1 ? '🍜' : '🥘'));
                         }
                         if (cleanText.indexOf('감자') !== -1 || cleanText.indexOf('포테이토') !== -1 || cleanText.indexOf('해시브라운') !== -1 || cleanText.indexOf('감자칩') !== -1 || cleanText.indexOf('칩') !== -1 || cleanText.indexOf('핫도그') !== -1) {
                             newWorldIngs.push('감자');
