@@ -31,7 +31,7 @@
         }
     </script>
     
-    <!-- Vue 3 -->
+    <!-- Vue 3 CDN -->
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -63,7 +63,7 @@
         <!-- HEADER -->
         <header class="bg-white rounded-3xl p-6 shadow-sm border border-amber-100 flex flex-col md:flex-row items-center justify-between gap-4 text-center md:text-left">
             <div class="flex items-center gap-4">
-                <div class="w-14 h-14 bg-gradient-to-tr from-amber-500 to-orange-400 rounded-2xl flex items-center justify-center text-3xl shadow-md shadow-orange-200 text-white">
+                <div class="w-14 h-14 bg-gradient-to-tr from-amber-500 to-orange-400 rounded-2xl flex items-center justify-center text-3xl shadow-md shadow-orange-200 text-white shrink-0">
                     🍱
                 </div>
                 <div>
@@ -152,7 +152,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-1">반찬 1 (메인반찬)</label>
-                        <input type="text" v-model="customMeal.side1" placeholder="예: 지코바/양념치킨, 제육" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold focus:bg-white focus:ring-2 focus:ring-orange-400 outline-none">
+                        <input type="text" v-model="customMeal.side1" placeholder="예: 후라이드 치킨, 양념치킨" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-bold focus:bg-white focus:ring-2 focus:ring-orange-400 outline-none">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-600 mb-1">반찬 2 (서브반찬)</label>
@@ -171,6 +171,9 @@
                 <div class="flex items-center justify-between pt-1 flex-wrap gap-2">
                     <div class="flex items-center gap-1.5 flex-wrap">
                         <span class="text-xs text-slate-500 font-bold">추천 식단 프리셋:</span>
+                        <button @click="applyPreset('fried')" class="bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-orange-700 text-xs font-bold px-2.5 py-1 rounded-lg transition-colors">
+                            🍗 일반 후라이드 치킨 세트
+                        </button>
                         <button @click="applyPreset('jicoba')" class="bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-orange-700 text-xs font-bold px-2.5 py-1 rounded-lg transition-colors">
                             🍗 지코바 치밥 세트
                         </button>
@@ -233,8 +236,11 @@
                         <span v-if="!isTimeSlipped && hasNewWorldIngredients(slotKey)" class="absolute bottom-1.5 right-2 bg-red-500 text-white text-[9px] font-black px-1.5 py-0.5 rounded-full">
                             아메리카 작물!
                         </span>
+                        <span v-if="!isTimeSlipped && !hasNewWorldIngredients(slotKey)" class="absolute bottom-1.5 right-2 bg-emerald-600 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full">
+                            유라시아 전통
+                        </span>
                         <span v-if="isTimeSlipped" class="absolute bottom-1.5 right-2 bg-slate-800 text-yellow-300 text-[9px] font-black px-1.5 py-0.5 rounded-full">
-                            변형됨
+                            {{ hasNewWorldIngredients(slotKey) ? '변형됨' : '원형 유지' }}
                         </span>
                     </div>
                 </div>
@@ -258,6 +264,9 @@
                         <span v-if="!isTimeSlipped && hasNewWorldIngredients('rice')" class="absolute bottom-2 right-3 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">
                             아메리카 작물 포함
                         </span>
+                        <span v-if="!isTimeSlipped && !hasNewWorldIngredients('rice')" class="absolute bottom-2 right-3 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                            유라시아 원산
+                        </span>
                     </div>
 
                     <!-- SOUP -->
@@ -276,6 +285,9 @@
                         </div>
                         <span v-if="!isTimeSlipped && hasNewWorldIngredients('soup')" class="absolute bottom-2 right-3 bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">
                             아메리카 작물 포함
+                        </span>
+                        <span v-if="!isTimeSlipped && !hasNewWorldIngredients('soup')" class="absolute bottom-2 right-3 bg-emerald-600 text-white text-[10px] font-bold px-2 py-0.5 rounded-full">
+                            유라시아 원산
                         </span>
                     </div>
                 </div>
@@ -307,8 +319,11 @@
                         <span v-if="!isTimeSlipped && hasNewWorldIngredients('dessert')" class="bg-red-500 text-white text-[9px] font-black px-2 py-0.5 rounded-full ml-auto">
                             아메리카 작물!
                         </span>
+                        <span v-if="!isTimeSlipped && !hasNewWorldIngredients('dessert')" class="bg-emerald-600 text-white text-[9px] font-bold px-2 py-0.5 rounded-full ml-auto">
+                            유라시아 원산
+                        </span>
                         <span v-if="isTimeSlipped" class="bg-slate-800 text-yellow-300 text-[9px] font-black px-2 py-0.5 rounded-full ml-auto">
-                            변형됨
+                            {{ hasNewWorldIngredients('dessert') ? '변형됨' : '원형 유지' }}
                         </span>
                     </div>
                 </div>
@@ -318,8 +333,8 @@
             <div class="bg-blue-50 border border-blue-200 rounded-2xl p-4 text-xs md:text-sm text-blue-900 flex items-start gap-3">
                 <i class="fa-solid fa-circle-info text-blue-500 text-lg mt-0.5"></i>
                 <div>
-                    <strong class="font-bold">💡 알뜰 세계사 상식:</strong>
-                    15세기 말 항해 시대 이후, <strong>아메리카 대륙 원산</strong>의 감자, 고추, 토마토, 옥수수, 호박, 카카오, 고구마 등이 전 세계로 퍼져나갔습니다. 반대로 <strong>아시아·유럽·아프리카 원산</strong>의 쌀, 밀, 소고기, 돼지고기, 닭, 양파, 커피 등이 아메리카 대륙으로 건너가 서로의 식문화를 완전히 바꿔놓았습니다!
+                    <strong class="font-bold">💡 치킨에 관한 재미있는 사실:</strong>
+                    닭(아시아 원산)과 밀가루(중동 원산), 식용유, 소금, 간장은 모두 유라시아 원산입니다! 따라서 <strong>일반 후라이드 치킨, 전기구이 통닭, 백숙, 간장치킨</strong>은 아메리카 작물 없이도 존재했습니다. 단, <strong>지코바, 양념치킨, 고추바사삭, 뿌링클</strong>처럼 고추장/고춧가루나 매운 시즈닝이 들어간 치킨만 아메리카 원산 작물인 고추가 필요하답니다!
                 </div>
             </div>
 
@@ -341,7 +356,7 @@
                             <input 
                                 type="text" 
                                 v-model="favoriteSearch" 
-                                placeholder="음식 이름 검색 또는 직접 입력 (예: 로제떡볶이, 뿌링클, 햄버거, 탕후루...)" 
+                                placeholder="검색 또는 직접 입력 (예: 치킨, 후라이드, 양념치킨, 햄버거, 로제떡볶이...)" 
                                 class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 text-xs font-bold focus:bg-white focus:ring-2 focus:ring-orange-400 outline-none shadow-sm">
                             <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3 text-slate-400 text-xs"></i>
                         </div>
@@ -360,7 +375,7 @@
                                 <h4 class="text-sm font-extrabold text-slate-900 mt-0.5">
                                     '{{ favoriteSearch.trim() }}' 실시간 연관성 분석 결과 보기
                                 </h4>
-                                <p class="text-xs text-slate-500">제시된 목록에 없는 음식이라도 클릭하면 아메리카 작물과의 관계를 바로 분석합니다.</p>
+                                <p class="text-xs text-slate-500">클릭하시면 해당 음식의 유라시아 전통 재료 vs 아메리카 전래 작물을 즉시 구분해 드립니다.</p>
                             </div>
                         </div>
                         <button 
@@ -401,8 +416,8 @@
                                 <span v-for="ing in food.newWorldIngredients" :key="ing" class="bg-red-50 text-red-600 border border-red-200 text-[10px] font-extrabold px-2 py-0.5 rounded-md">
                                     🌶️ {{ ing }}
                                 </span>
-                                <span v-if="!food.newWorldIngredients || food.newWorldIngredients.length === 0" class="bg-slate-100 text-slate-500 text-[10px] font-bold px-2 py-0.5 rounded-md">
-                                    아시아·유럽·아프리카 원산
+                                <span v-if="!food.newWorldIngredients || food.newWorldIngredients.length === 0" class="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-bold px-2 py-0.5 rounded-md">
+                                    🌿 아시아·유럽 전통 재료 (100%)
                                 </span>
                             </div>
                             <span class="text-xs font-bold text-orange-600 group-hover:translate-x-1 transition-transform flex items-center gap-1">
@@ -550,8 +565,12 @@
                             🌶️ {{ ing }}
                         </span>
                     </div>
-                    <div v-else class="text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                        이 음식은 주로 아시아/유럽 원산의 전통 재료로 구성되어 대륙 간 작물 교환 전에도 비슷한 형태로 존재했습니다.
+                    <div v-else class="text-xs text-emerald-800 bg-emerald-50 p-3 rounded-xl border border-emerald-200 flex items-center gap-2">
+                        <span class="text-lg">🌿</span>
+                        <div>
+                            <strong>아메리카 작물 0%! (유라시아 전통 음식)</strong><br>
+                            이 음식은 아시아·유럽·아프리카의 전통 식재료로만 만들어집니다. 1492년 아메리카 작물 전래 이전에도 식탁에 존재했습니다!
+                        </div>
                     </div>
                 </div>
 
@@ -585,8 +604,56 @@
     </div>
 
     <script>
-        // FOOD DATABASE DEFINITION
+        // FOOD DATABASE DEFINITION WITH SEPARATED CHICKEN TYPES
         var FOOD_DATABASE = {
+            friedChicken: {
+                id: 'friedChicken',
+                name: '일반 후라이드 치킨',
+                icon: '🍗',
+                slippedName: '후라이드 치킨 (유라시아 전통 닭튀김)',
+                slippedIcon: '🍗',
+                newWorldIngredients: [],
+                category: '치킨/패스트푸드',
+                desc: '바삭한 튀김 옷과 고소한 가슴살·다리 살이 어우러진 대한민국 대표 기본 치킨입니다.',
+                slippedDesc: '닭(아시아 원산), 밀가루(중동 원산), 식용유, 소금 모두 아시아/유럽/아프리카에 존재하던 완벽한 유라시아 조합입니다!',
+                historyStory: '닭은 수천 년 전 동남아/인도에서 야생 적색야계가 가축화된 것입니다. 밀가루 반죽을 묻혀 기름에 튀기는 요법 역시 고대 중동과 고대 로마, 조선시대(수운잡방의 가호계) 등 구대륙에 오래전부터 존재하던 방식입니다.'
+            },
+            soyChicken: {
+                id: 'soyChicken',
+                name: '간장 마늘 치킨',
+                icon: '🍗',
+                slippedName: '간장 마늘 닭구이/튀김 (원형 100% 유지)',
+                slippedIcon: '🍗',
+                newWorldIngredients: [],
+                category: '치킨/패스트푸드',
+                desc: '달콤 짭조름한 간장과 알싸한 마늘 소스로 버무린 남녀노소 인기 치킨입니다.',
+                slippedDesc: '주재료인 닭, 간장(대두 콩), 마늘, 물엿(쌀/보리)은 모두 동아시아 전통 식재료이므로 아메리카 작물 없이도 완벽하게 만들어집니다.',
+                historyStory: '조선시대에도 닭에 간장, 마늘, 생강으로 간을 하여 졸이거나 구운 계장(鷄醬) 요리를 즐겨 먹었습니다. 고추 전래 이전에도 완벽하게 먹을 수 있던 오리지널 아시아풍 치킨입니다!'
+            },
+            yangnyeomChicken: {
+                id: 'yangnyeomChicken',
+                name: '매콤 양념치킨',
+                icon: '🍗',
+                slippedName: '달콤 소금/간장 닭튀김 (고추/토마토 0%)',
+                slippedIcon: '🍗',
+                newWorldIngredients: ['고추', '토마토'],
+                category: '치킨/패스트푸드',
+                desc: '고추장·고춧가루의 매콤함과 토마토 케첩, 물엿의 달콤함이 더해진 K-치킨의 대명사입니다.',
+                slippedDesc: '매운 양념의 핵심인 고추장/고춧가루(고추)와 토마토 케첩(토마토)이 빠져 빨간 양념 대신 간장/물엿 베이스 달콤 닭튀김이 됩니다.',
+                historyStory: '한국 특유의 빨간 양념치킨은 1980년대 윤종계 씨에 의해 발명되었습니다. 양념에 쓰이는 고추장/고춧가루(고추)와 케첩(토마토)은 둘 다 아메리카 대륙 원산 작물입니다!'
+            },
+            jicobaChicken: {
+                id: 'jicobaChicken',
+                name: '지코바 숯불 양념치킨',
+                icon: '🍗',
+                slippedName: '소금 숯불 닭구이 (고추 양념 0%)',
+                slippedIcon: '🍗',
+                newWorldIngredients: ['고추'],
+                category: '치킨/패스트푸드',
+                desc: '매콤달콤한 고추장·고춧가루 숯불 양념과 떡, 닭고기가 어우러진 숯불 치킨입니다.',
+                slippedDesc: '고추(고춧가루/고추장)가 존재하지 않아 빨간 매운 양념이 불가능하며, 소금이나 간장에 구운 담백한 숯불 닭구이 형태만 가능합니다.',
+                historyStory: '닭은 아시아 원산 가축이지만, 지코바 특유의 매운맛을 내는 핵심 재료인 고추는 아메리카 대륙 원산입니다! 고추 전래 없이는 매콤한 지코바 치밥 문화가 성립할 수 없었습니다.'
+            },
             whiteRice: {
                 id: 'whiteRice',
                 name: '흰쌀밥',
@@ -610,18 +677,6 @@
                 desc: '포근포근한 감자와 부드러운 계란이 어우러진 시원한 국입니다.',
                 slippedDesc: '아메리카 원산 작물인 감자가 빠지고, 아시아·유럽 원산인 계란과 무, 파만 들어간 맑은 장국 형태가 됩니다.',
                 historyStory: '감자는 남미 안데스 산맥 고산지대가 원산지인 구황작물입니다. 16세기 이후 유럽을 거쳐 조선 후기(19세기)에 들어왔습니다.'
-            },
-            jicobaChicken: {
-                id: 'jicobaChicken',
-                name: '지코바 숯불 양념치킨',
-                icon: '🍗',
-                slippedName: '소금 숯불 닭구이 (고추 양념 0%)',
-                slippedIcon: '🍗',
-                newWorldIngredients: ['고추'],
-                category: '치킨/패스트푸드',
-                desc: '매콤달콤한 고추장·고춧가루 숯불 양념과 떡, 닭고기가 어우러진 대한민국 대표 양념치킨입니다.',
-                slippedDesc: '고추(고춧가루/고추장)가 존재하지 않아 빨간 매운 양념이 불가능하며, 소금이나 간장에 구운 담백한 숯불 닭구이 형태만 가능합니다.',
-                historyStory: '닭은 아시아 원산 가축이지만, 지코바 특유의 매운맛을 내는 핵심 재료인 고추는 아메리카 대륙 원산입니다! 고추 전래 없이는 오늘날의 지코바 양념 치밥 문화가 성립할 수 없었습니다.'
             },
             tteokbokki: {
                 id: 'tteokbokki',
@@ -914,7 +969,7 @@
         };
 
         var NEW_WORLD_LIST = [
-            { name: '고추 (Chili)', icon: '🌶️', origin: '중남미 카리브해', desc: '한국인의 매운맛을 완성한 주인공. 16세기 전래되어 김치, 고추장, 지코바/양념치킨, 찌개 혁명을 일으킴.', koreanFoods: '김치, 지코바/치킨, 떡볶이, 제육볶음, 매운탕' },
+            { name: '고추 (Chili)', icon: '🌶️', origin: '중남미 카리브해', desc: '한국인의 매운맛을 완성한 주인공. 16세기 전래되어 김치, 고추장, 지코바/양념치킨, 찌개 혁명을 일으킴.', koreanFoods: '김치, 지코바/양념치킨, 떡볶이, 제육볶음, 매운탕' },
             { name: '감자 (Potato)', icon: '🥔', origin: '남미 안데스 산맥', desc: '척박한 땅에서도 잘 자라 굶주림에서 인류를 구한 구황작물. 프렌치프라이, 감자전의 원료.', koreanFoods: '감자탕, 감자전, 카레, 패스트푸드' },
             { name: '토마토 (Tomato)', icon: '🍅', origin: '중남미 안데스', desc: '처음엔 관상용 식물로 오해받았으나, 유럽으로 건너가 피자/파스타 소스의 기둥이 됨.', koreanFoods: '케첩, 피자소스, 토마토 스파게티' },
             { name: '카카오 (Cacao)', icon: '🍫', origin: '중남미 마야/아스테카', desc: '고대 아메리카 원주민들의 음료. 전 세계로 퍼진 뒤 설탕과 우유가 섞여 달콤한 초콜릿이 됨.', koreanFoods: '초콜릿, 초코우유, 가나슈' },
@@ -923,9 +978,9 @@
         ];
 
         var OLD_WORLD_LIST = [
-            { name: '닭 & 소 & 돼지 (가축)', icon: '🐓', origin: '유럽 및 아시아', desc: '닭, 소, 돼지는 유라시아 가축입니다. 15세기 이전 아메리카 대륙에는 소와 돼지가 없었습니다.', impact: '지코바, 삼겹살, 바비큐 문화의 기틀' },
+            { name: '닭 & 소 & 돼지 (가축)', icon: '🐓', origin: '유럽 및 아시아', desc: '닭, 소, 돼지는 유라시아 가축입니다. 15세기 이전 아메리카 대륙에는 소와 돼지가 없었습니다.', impact: '후라이드 치킨, 삼겹살, 바비큐 문화의 기틀' },
             { name: '쌀 (Rice)', icon: '🌾', origin: '아시아 (중국/한국/인도)', desc: '아시아의 주식. 아메리카 대륙으로 건너가 남미의 주요 곡물이 됨.', impact: '남미 리조또 및 볶음밥 문화 형성' },
-            { name: '밀 (Wheat)', icon: '🌾', origin: '중동 서아시아', desc: '빵과 국수의 원료. 아메리카 대평원으로 건너가 세계 최대 밀 생산지(미국/카나다)를 만듦.', impact: '세계적 빵 및 파스타 문화 확산' },
+            { name: '밀 (Wheat)', icon: '🌾', origin: '중동 서아시아', desc: '빵과 국수, 치킨 튀김옷의 원료. 아메리카 대평원으로 건너가 세계 최대 밀 생산지(미국/카나다)를 만듦.', impact: '세계적 빵 및 파스타, 치킨 튀김옷 확산' },
             { name: '커피 (Coffee)', icon: '☕', origin: '아프리카 에티오피아', desc: '아라비아를 거쳐 아메리카 중남미(브라질, 콜롬비아)로 옮겨져 세계 최대 커피 재배지가 됨.', impact: '남미 브라질 커피 산업의 기틀' },
             { name: '설탕 / 사탕수수', icon: '🍬', origin: '동남아시아 / 인도', desc: '카리브해 섬들에 대규모 사탕수수 농장이 만들어지면서 세계적인 단맛 대향연이 시작됨.', impact: '초콜릿/커피와 결합하여 디저트 혁명' }
         ];
@@ -950,7 +1005,7 @@
                         customMeal: {
                             rice: '흰쌀밥',
                             soup: '감자 계란국',
-                            side1: '지코바 숯불 양념치킨',
+                            side1: '일반 후라이드 치킨',
                             side2: '매콤 떡볶이',
                             side3: '포기 배추김치',
                             dessert: '달콤 초코우유'
@@ -959,17 +1014,20 @@
                         currentMeal: {
                             rice: FOOD_DATABASE.whiteRice,
                             soup: FOOD_DATABASE.potatoSoup,
-                            side1: FOOD_DATABASE.jicobaChicken,
+                            side1: FOOD_DATABASE.friedChicken,
                             side2: FOOD_DATABASE.tteokbokki,
                             side3: FOOD_DATABASE.baechuKimchi,
                             dessert: FOOD_DATABASE.chocoMilk
                         },
 
                         favoriteFoods: [
+                            FOOD_DATABASE.friedChicken,
+                            FOOD_DATABASE.yangnyeomChicken,
+                            FOOD_DATABASE.soyChicken,
+                            FOOD_DATABASE.jicobaChicken,
+                            FOOD_DATABASE.bburingkle,
                             FOOD_DATABASE.ramyeon,
                             FOOD_DATABASE.roseTteokbokki,
-                            FOOD_DATABASE.bburingkle,
-                            FOOD_DATABASE.jicobaChicken,
                             FOOD_DATABASE.hamburger,
                             FOOD_DATABASE.tteokbokki,
                             FOOD_DATABASE.gogumaPizza,
@@ -1019,7 +1077,16 @@
                         this.isModalTimeSlipped = !this.isModalTimeSlipped;
                     },
                     applyPreset: function(type) {
-                        if (type === 'jicoba') {
+                        if (type === 'fried') {
+                            this.customMeal = {
+                                rice: '흰쌀밥',
+                                soup: '감자 계란국',
+                                side1: '일반 후라이드 치킨',
+                                side2: '매콤 떡볶이',
+                                side3: '포기 배추김치',
+                                dessert: '달콤 초코우유'
+                            };
+                        } else if (type === 'jicoba') {
                             this.customMeal = {
                                 rice: '흰쌀밥',
                                 soup: '감자 계란국',
@@ -1079,6 +1146,7 @@
                         var item = this.currentMeal && this.currentMeal[slotKey];
                         return item && item.newWorldIngredients && item.newWorldIngredients.length > 0;
                     },
+
                     analyzeTextToFoodObject: function(textInput, defaultCategory) {
                         var cleanText = textInput ? textInput.trim() : '';
                         if (!cleanText) {
@@ -1096,38 +1164,86 @@
                             };
                         }
 
+                        // 1. EXACT & SMART KEYWORD OVERRIDES FOR CHICKEN & COMMON DISHES
+                        var lower = cleanText.toLowerCase();
+
+                        // Specific Chicken Overrides
+                        if (lower === '치킨' || lower === '일반치킨' || lower === '일반 치킨' || lower === '후라이드' || lower === '후라이드치킨' || lower === '후라이드 치킨' || lower === '통닭' || lower === '전기구이' || lower === '백숙' || lower === '삼계탕') {
+                            return FOOD_DATABASE.friedChicken;
+                        }
+                        if (cleanText.indexOf('지코바') !== -1) {
+                            return FOOD_DATABASE.jicobaChicken;
+                        }
+                        if (cleanText.indexOf('간장치킨') !== -1 || cleanText.indexOf('간장 치킨') !== -1 || cleanText.indexOf('마늘치킨') !== -1) {
+                            return FOOD_DATABASE.soyChicken;
+                        }
+                        if (cleanText.indexOf('양념치킨') !== -1 || cleanText.indexOf('양념 치킨') !== -1 || cleanText.indexOf('양념통닭') !== -1) {
+                            return FOOD_DATABASE.yangnyeomChicken;
+                        }
+                        if (cleanText.indexOf('뿌링클') !== -1) {
+                            return FOOD_DATABASE.bburingkle;
+                        }
+
+                        // 2. CHECK EXACT DATABASE MATCHES
                         for (var key in FOOD_DATABASE) {
                             var dbItem = FOOD_DATABASE[key];
-                            if (cleanText.indexOf(dbItem.name) !== -1 || dbItem.name.indexOf(cleanText) !== -1) {
+                            if (cleanText === dbItem.name) {
                                 return dbItem;
                             }
                         }
 
+                        // 3. CHECK SUBSTRING MATCHES
+                        for (var key2 in FOOD_DATABASE) {
+                            var dbItem2 = FOOD_DATABASE[key2];
+                            if (cleanText.indexOf(dbItem2.name) !== -1) {
+                                return dbItem2;
+                            }
+                        }
+
+                        // 4. FALLBACK REAL-TIME ANALYZER
                         var newWorldIngs = [];
                         var icon = '🍲';
                         
-                        if (cleanText.indexOf('고추') !== -1 || cleanText.indexOf('김치') !== -1 || cleanText.indexOf('지코바') !== -1 || cleanText.indexOf('양념') !== -1 || cleanText.indexOf('치킨') !== -1 || cleanText.indexOf('떡볶이') !== -1 || cleanText.indexOf('매운') !== -1 || cleanText.indexOf('불닭') !== -1 || cleanText.indexOf('제육') !== -1 || cleanText.indexOf('짬뽕') !== -1 || cleanText.indexOf('마라') !== -1 || cleanText.indexOf('고추장') !== -1 || cleanText.indexOf('깍두기') !== -1 || cleanText.indexOf('쌈장') !== -1 || cleanText.indexOf('부대찌개') !== -1 || cleanText.indexOf('카레') !== -1 || cleanText.indexOf('로제') !== -1 || cleanText.indexOf('뿌링클') !== -1 || cleanText.indexOf('타코') !== -1 || cleanText.indexOf('라면') !== -1) {
+                        // Check if it's chicken-related first
+                        var isChicken = cleanText.indexOf('치킨') !== -1 || cleanText.indexOf('닭') !== -1 || cleanText.indexOf('통닭') !== -1;
+
+                        // Chilli check (only if spicy keywords exist!)
+                        var hasSpicyKeyword = cleanText.indexOf('고추') !== -1 || cleanText.indexOf('김치') !== -1 || cleanText.indexOf('양념') !== -1 || cleanText.indexOf('매운') !== -1 || cleanText.indexOf('불닭') !== -1 || cleanText.indexOf('제육') !== -1 || cleanText.indexOf('짬뽕') !== -1 || cleanText.indexOf('마라') !== -1 || cleanText.indexOf('고추장') !== -1 || cleanText.indexOf('깍두기') !== -1 || cleanText.indexOf('쌈장') !== -1 || cleanText.indexOf('부대찌개') !== -1 || cleanText.indexOf('카레') !== -1 || cleanText.indexOf('로제') !== -1 || cleanText.indexOf('볼케이노') !== -1 || cleanText.indexOf('핫') !== -1 || cleanText.indexOf('라면') !== -1;
+
+                        if (hasSpicyKeyword) {
                             newWorldIngs.push('고추');
-                            icon = (cleanText.indexOf('치킨') !== -1 || cleanText.indexOf('지코바') !== -1 || cleanText.indexOf('닭') !== -1 || cleanText.indexOf('뿌링클') !== -1) ? '🍗' : (cleanText.indexOf('김치') !== -1 ? '🥗' : (cleanText.indexOf('라면') !== -1 || cleanText.indexOf('짬뽕') !== -1 || cleanText.indexOf('마라') !== -1 ? '🍜' : '🥘'));
                         }
+
+                        if (isChicken) {
+                            icon = '🍗';
+                            // If it's general fried/roast chicken without spicy words, no chili is needed!
+                            if (cleanText.indexOf('양념') !== -1 || cleanText.indexOf('케첩') !== -1) {
+                                if (newWorldIngs.indexOf('토마토') === -1) newWorldIngs.push('토마토');
+                            }
+                        } else {
+                            if (cleanText.indexOf('김치') !== -1) icon = '🥗';
+                            else if (cleanText.indexOf('라면') !== -1 || cleanText.indexOf('짬뽕') !== -1 || cleanText.indexOf('마라') !== -1) icon = '🍜';
+                            else icon = '🥘';
+                        }
+
                         if (cleanText.indexOf('감자') !== -1 || cleanText.indexOf('포테이토') !== -1 || cleanText.indexOf('해시브라운') !== -1 || cleanText.indexOf('감자칩') !== -1 || cleanText.indexOf('칩') !== -1 || cleanText.indexOf('핫도그') !== -1) {
-                            newWorldIngs.push('감자');
-                            icon = '🥔';
+                            if (newWorldIngs.indexOf('감자') === -1) newWorldIngs.push('감자');
+                            if (!isChicken) icon = '🥔';
                         }
                         if (cleanText.indexOf('토마토') !== -1 || cleanText.indexOf('케첩') !== -1 || cleanText.indexOf('피자') !== -1 || cleanText.indexOf('스파게티') !== -1 || cleanText.indexOf('햄버거') !== -1 || cleanText.indexOf('버거') !== -1 || cleanText.indexOf('돈까스') !== -1) {
-                            newWorldIngs.push('토마토');
-                            icon = '🍅';
+                            if (newWorldIngs.indexOf('토마토') === -1) newWorldIngs.push('토마토');
+                            if (!isChicken) icon = '🍅';
                         }
                         if (cleanText.indexOf('초코') !== -1 || cleanText.indexOf('초콜릿') !== -1 || cleanText.indexOf('카카오') !== -1 || cleanText.indexOf('아이스크림') !== -1) {
-                            newWorldIngs.push('카카오');
+                            if (newWorldIngs.indexOf('카카오') === -1) newWorldIngs.push('카카오');
                             icon = '🍫';
                         }
                         if (cleanText.indexOf('옥수수') !== -1 || cleanText.indexOf('콘') !== -1 || cleanText.indexOf('팝콘') !== -1 || cleanText.indexOf('타코') !== -1) {
-                            newWorldIngs.push('옥수수');
+                            if (newWorldIngs.indexOf('옥수수') === -1) newWorldIngs.push('옥수수');
                             icon = '🌽';
                         }
                         if (cleanText.indexOf('고구마') !== -1) {
-                            newWorldIngs.push('고구마');
+                            if (newWorldIngs.indexOf('고구마') === -1) newWorldIngs.push('고구마');
                             icon = '🍠';
                         }
 
@@ -1138,8 +1254,8 @@
                             slippedName = cleanText + ' (' + newWorldIngs.join('/') + ' 제외/변형)';
                             slippedDesc = '1492년 전래 이전 아시아/유럽에는 ' + newWorldIngs.join(', ') + ' 작물이 전혀 존재하지 않았습니다. 따라서 [' + cleanText + '] 특유의 매운 양념이나 식감이 빠지고 전통 소금/간장 구이나 스튜 형태로 변합니다.';
                         } else {
-                            slippedName = cleanText + ' (유라시아 전통 재료)';
-                            slippedDesc = '이 음식은 쌀, 닭, 소고기, 돼지고기, 밀, 무, 마늘 등 아시아/유럽/아프리카 원산 재료 위주로 구성되어 아메리카 작물 전래 전에도 비슷한 형태로 존재했습니다.';
+                            slippedName = cleanText + ' (유라시아 전통 100%)';
+                            slippedDesc = '이 음식은 닭, 쌀, 소고기, 돼지고기, 밀, 무, 마늘 등 아시아/유럽/아프리카 원산 재료 위주로 구성되어 아메리카 작물 전래 전(1492년 이전)에도 완전히 동일한 형태로 존재했습니다!';
                         }
 
                         return {
@@ -1147,11 +1263,11 @@
                             name: cleanText,
                             icon: icon,
                             slippedName: slippedName,
-                            slippedIcon: newWorldIngs.length > 0 ? '🍗' : icon,
+                            slippedIcon: icon,
                             newWorldIngredients: newWorldIngs,
                             desc: '직접 검색/입력하신 메뉴 [' + cleanText + ']의 실시간 분석 결과입니다.',
                             slippedDesc: slippedDesc,
-                            historyStory: cleanText + '에 들어가는 재료 중 ' + (newWorldIngs.length > 0 ? newWorldIngs.join(', ') + '는 15세기 말 이후 아메리카 대륙에서 전 세계로 전파된 핵심 작물입니다!' : '주요 재료들은 아시아/유럽/아프리카 원산지로 수천 년 전부터 우리 식탁을 지켜온 식재료입니다.'),
+                            historyStory: cleanText + '에 들어가는 재료 중 ' + (newWorldIngs.length > 0 ? newWorldIngs.join(', ') + '는 15세기 말 이후 아메리카 대륙에서 전 세계로 전파된 핵심 작물입니다!' : '주요 재료들은 아시아/유럽/아프리카 원산지로 수천 년 전부터 우리 식탁을 지켜온 전통 식재료입니다.'),
                             category: defaultCategory || '검색 음식'
                         };
                     },
@@ -1164,7 +1280,7 @@
                         if (!item) return;
                         this.selectedDetailItem = item;
                         this.selectedDetailSlotName = this.getSlotName(slotKey);
-                        this.isModalTimeSlipped = false; // Always default to modern view
+                        this.isModalTimeSlipped = false;
                         this.showDetailModal = true;
                     },
                     closeModal: function() {
